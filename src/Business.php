@@ -25,11 +25,11 @@ final class Business implements BusinessInterface, \Serializable, \JsonSerializa
     /**
      * Creates a new business.
      *
-     * @param DayInterface[]            $days
+     * @param DayInterface[]|null       $days
      * @param Holidays|\DateTime[]|null $holidays
      * @param \DateTimeZone|null        $timezone
      */
-    public function __construct(array $days, $holidays = null, \DateTimeZone $timezone = null)
+    public function __construct($days = null, $holidays = null, \DateTimeZone $timezone = null)
     {
         if (is_array($holidays)) {
             $holidays = new Holidays($holidays);
