@@ -80,6 +80,135 @@ $nextDate = $business->closest(new \DateTime('2015-05-11 10:00'));
 $lastDate = $business->closest(new \DateTime('2015-05-11 10:00'), Business::CLOSEST_LAST);
 ```
 
+### Symfony 2 & 3 Forms
+
+If an entity depends on a field of type `Business`, you can easily create a specific type to use in your form builder :
+
+```php
+namespace Your\Form\Type;
+
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\CallbackTransformer;
+use Business\Days;
+use Business\TimeInterval;
+
+class DayType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('dayOfWeek', ChoiceType::class, ['choices' => Days::toFormArray(), 'choices_as_values' => true]);
+        $builder->add('openingIntervals', CollectionType::class, [
+                'entry_type' => 'text',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false
+            ]);
+
+        $builder->get('openingIntervals')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($timeIntervalsAsArrayOfObjects) {
+                    if ($timeIntervalsAsArrayOfObjects == null) {
+                        return [];
+                    }
+                    $timeIntervalAsArrayOfStrings = [];
+                    foreach ($timeIntervalsAsArrayOfObjects as $key => $value) {
+                        $timeIntervalAsArrayOfStrings[$key] = (string) $value;
+                    }
+                    return $timeIntervalAsArrayOfStrings;
+                },
+                function ($timeIntervalAsArrayOfStrings) {
+                    if ($timeIntervalAsArrayOfStrings == null || $timeIntervalAsArrayOfStrings == []) {
+                        return [];
+                    }
+                    $timeIntervalsAsArrayOfObjects = [];
+                    foreach ($timeIntervalAsArrayOfStrings as $key => $value) {
+                        if ($value != "") {
+                            $timeIntervalsAsArrayOfObjects[$key] = explode(TimeInterval::SEPARATOR, $value);
+                        }
+                    }
+                    return $timeIntervalsAsArrayOfObjects;
+                }
+            ));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Business\Day',
+        ));
+    }
+
+    public function getParent()
+    {
+        return FormType::class;
+    }
+}
+```
+
+And : 
+
+
+```php
+namespace Your\Form\Type;
+
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\CallbackTransformer;
+
+class BusinessType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('days', CollectionType::class, [
+                'entry_type' => DayType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false
+            ]);
+
+        $builder->add('holidays', CollectionType::class, [
+                'entry_type' => 'datetime',
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false
+            ]);
+        $builder->add('timezone', TimezoneType::class);
+
+        $builder->get('timezone')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($timeZoneObject) {
+                    return $timeZoneObject->getName();
+                },
+                function ($timeZoneString) {
+                    return new \DateTimeZone($timeZoneString);
+                }
+            ));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Business\Business',
+        ));
+    }
+
+    public function getParent()
+    {
+        return FormType::class;
+    }
+}
+```
+
+
 ### Serialization
 
 #### PHP serialization
