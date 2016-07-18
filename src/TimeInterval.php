@@ -21,6 +21,8 @@ final class TimeInterval implements \JsonSerializable
     private $start;
     private $end;
 
+    const SEPARATOR = ";";
+
     /**
      * Creates a time interval.
      *
@@ -99,5 +101,15 @@ final class TimeInterval implements \JsonSerializable
             'start' => $this->start,
             'end' => $this->end,
         ];
+    }
+
+    /**
+     * Gets the object as a string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->start->toString() . self::SEPARATOR . $this->end->toString();
     }
 }
