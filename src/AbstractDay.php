@@ -30,7 +30,7 @@ abstract class AbstractDay implements DayInterface
      * @param integer $dayOfWeek        The day of week
      * @param array   $openingIntervals The opening intervals
      */
-    public function __construct($dayOfWeek, array $openingIntervals)
+    public function __construct($dayOfWeek = Days::MONDAY, array $openingIntervals = [['10:00', '18:00']])
     {
         $this->setDayOfWeek($dayOfWeek);
         $this->setOpeningIntervals($openingIntervals);
