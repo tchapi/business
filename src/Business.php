@@ -355,7 +355,7 @@ final class Business implements BusinessInterface, \Serializable, \JsonSerializa
      *
      * @throws \InvalidArgumentException If no days are passed
      */
-    private function setDays(array $days)
+    public function setDays(array $days)
     {
         if (empty($days)) {
             throw new \InvalidArgumentException('At least one day must be added.');
