@@ -26,7 +26,7 @@ final class Days
     const SATURDAY = 6;
     const SUNDAY = 7;
 
-    private static $strings = [
+    public static $strings = [
         self::MONDAY => 'Monday',
         self::TUESDAY => 'Tuesday',
         self::WEDNESDAY => 'Wednesday',
