@@ -367,4 +367,44 @@ final class Business implements BusinessInterface, \Serializable, \JsonSerializa
             $this->addDay($day);
         }
     }
+
+    /**
+     * Retrieves the opening days
+     *
+     * @return DayInterface[]
+     */
+    public function getDays()
+    {
+        return $this->days;
+    }
+
+    /**
+     * Retrieves the timezone
+     *
+     * @return \DateTimeZone|null
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * Sets the timezone
+     *
+     * @param \DateTimeZone|null $timezone
+     */
+    public function setTimezone(\DateTimeZone $timezone = null)
+    {
+        $this->timezone = $timezone ?: new \DateTimeZone(date_default_timezone_get());
+    }
+
+    /**
+     * Retrieves the holidays
+     *
+     * @return Holidays|\DateTime[]|null
+     */
+    public function getHolidays()
+    {
+        return $this->holidays;
+    }
 }

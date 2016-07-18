@@ -183,4 +183,12 @@ abstract class AbstractDay implements DayInterface
             return ($a->getStart() > $b->getStart()) ? 1 : -1;
         });
     }
+
+    /**
+     * Gets the opening intervals.
+     */
+    public function getOpeningIntervals()
+    {
+        return $this->openingIntervals;
+    }
 }
