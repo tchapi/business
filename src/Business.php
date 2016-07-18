@@ -351,14 +351,17 @@ final class Business implements BusinessInterface, \Serializable, \JsonSerializa
     /**
      * Adds a set of days.
      *
-     * @param DayInterface[] $days
+     * @param DayInterface[]|null $days
      *
-     * @throws \InvalidArgumentException If no days are passed
      */
-    public function setDays(array $days)
+    public function setDays($days)
     {
 
         $this->days = [];
+        
+        if (is_null($days)) {
+            return;
+        }
 
         foreach ($days as $day) {
             $this->addDay($day);
@@ -368,7 +371,7 @@ final class Business implements BusinessInterface, \Serializable, \JsonSerializa
     /**
      * Retrieves the opening days
      *
-     * @return DayInterface[]
+     * @return DayInterface[]|null
      */
     public function getDays()
     {
