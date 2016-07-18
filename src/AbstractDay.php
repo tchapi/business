@@ -145,7 +145,7 @@ abstract class AbstractDay implements DayInterface
      *
      * @throws \InvalidArgumentException If the given day is invalid
      */
-    protected function setDayOfWeek($dayOfWeek)
+    public function setDayOfWeek($dayOfWeek)
     {
         if (!in_array($dayOfWeek, Days::toArray())) {
             throw new \InvalidArgumentException(sprintf('Invalid day of week "%s".', $dayOfWeek));
@@ -161,7 +161,7 @@ abstract class AbstractDay implements DayInterface
      *
      * @throws \InvalidArgumentException If no days are passed or invalid interval is passed
      */
-    protected function setOpeningIntervals(array $openingIntervals)
+    public function setOpeningIntervals(array $openingIntervals)
     {
         if (empty($openingIntervals)) {
             throw new \InvalidArgumentException('The day must have at least one opening interval.');
