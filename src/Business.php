@@ -357,9 +357,6 @@ final class Business implements BusinessInterface, \Serializable, \JsonSerializa
      */
     public function setDays(array $days)
     {
-        if (empty($days)) {
-            throw new \InvalidArgumentException('At least one day must be added.');
-        }
 
         $this->days = [];
 
